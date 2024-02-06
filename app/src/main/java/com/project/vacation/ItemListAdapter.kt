@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory
+package com.project.vacation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.inventory.data.Item
-import com.example.inventory.data.getFormattedPrice
-import com.example.inventory.databinding.ItemListItemBinding
+import com.project.vacation.data.VacationItem
+import com.project.vacation.databinding.ItemListItemBinding
 
 /**
  * [ListAdapter] implementation for the recyclerview.
  */
 
-class ItemListAdapter(private val onItemClicked: (Item) -> Unit) :
-    ListAdapter<Item, ItemListAdapter.ItemViewHolder>(DiffCallback) {
+class ItemListAdapter(private val onItemClicked: (VacationItem) -> Unit) :
+    ListAdapter<VacationItem, ItemListAdapter.ItemViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
@@ -52,21 +51,27 @@ class ItemListAdapter(private val onItemClicked: (Item) -> Unit) :
     class ItemViewHolder(private var binding: ItemListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Item) {
-            binding.itemName.text = item.itemName
-            binding.itemPrice.text = item.getFormattedPrice()
-            binding.itemQuantity.text = item.quantityInStock.toString()
+        fun bind(vacationItem: VacationItem) {
+            binding.itemTitle.text = vacationItem.title
+            binding.itemPlace.text = vacationItem.place
+            binding.itemQuantity.text = vacationItem.startDate
         }
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<Item>() {
-            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem === newItem
+        private val DiffCallback = object : DiffUtil.ItemCallback<VacationItem>() {
+            override fun areItemsTheSame(
+                oldVacationItem: VacationItem,
+                newVacationItem: VacationItem
+            ): Boolean {
+                return oldVacationItem === newVacationItem
             }
 
-            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem.itemName == newItem.itemName
+            override fun areContentsTheSame(
+                oldVacationItem: VacationItem,
+                newVacationItem: VacationItem
+            ): Boolean {
+                return oldVacationItem.title == newVacationItem.title
             }
         }
     }

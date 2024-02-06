@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory
+package com.project.vacation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.inventory.databinding.ItemListFragmentBinding
+import com.project.vacation.databinding.ItemListFragmentBinding
 
 /**
  * Main fragment displaying details for all items in the database.
@@ -32,7 +32,7 @@ import com.example.inventory.databinding.ItemListFragmentBinding
 class ItemListFragment : Fragment() {
     private val viewModel: InventoryViewModel by activityViewModels {
         InventoryViewModelFactory(
-            (activity?.application as InventoryApplication).database.itemDao()
+            (activity?.application as VacationApp).database.itemDao()
         )
     }
 

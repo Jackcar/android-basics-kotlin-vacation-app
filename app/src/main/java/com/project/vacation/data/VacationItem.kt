@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory.data
+package com.project.vacation.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.text.NumberFormat
 
 /**
  * Entity data class represents a single row in the database.
  */
 @Entity
-data class Item(
+data class VacationItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    @ColumnInfo(name = "name")
-    val itemName: String,
-    @ColumnInfo(name = "price")
-    val itemPrice: Double,
-    @ColumnInfo(name = "quantity")
-    val quantityInStock: Int,
+    @ColumnInfo(name = "title")
+    val title: String,
+    @ColumnInfo(name = "place")
+    val place: String,
+    @ColumnInfo(name = "startDate")
+    val startDate: String,
+    @ColumnInfo(name = "endDate")
+    val endDate: String
 )
-/**
- * Returns the passed in price in currency format.
- */
-fun Item.getFormattedPrice(): String =
-    NumberFormat.getCurrencyInstance().format(itemPrice)

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory.data
+package com.project.vacation.data
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -29,20 +29,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ItemDao {
 
-    @Query("SELECT * from item ORDER BY name ASC")
-    fun getItems(): Flow<List<Item>>
+    @Query("SELECT * from vacationItem ORDER BY title ASC")
+    fun getItems(): Flow<List<VacationItem>>
 
-    @Query("SELECT * from item WHERE id = :id")
-    fun getItem(id: Int): Flow<Item>
+    @Query("SELECT * from vacationItem WHERE id = :id")
+    fun getItem(id: Int): Flow<VacationItem>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(item: Item)
+    suspend fun insert(vacationItem: VacationItem)
 
     @Update
-    suspend fun update(item: Item)
+    suspend fun update(vacationItem: VacationItem)
 
     @Delete
-    suspend fun delete(item: Item)
+    suspend fun delete(vacationItem: VacationItem)
 }

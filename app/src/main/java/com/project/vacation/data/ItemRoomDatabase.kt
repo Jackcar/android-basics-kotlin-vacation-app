@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.project.vacation.data
 
 import android.content.Context
 import androidx.room.Database
@@ -24,7 +24,7 @@ import androidx.room.RoomDatabase
 /**
  * Database class with a singleton INSTANCE object.
  */
-@Database(entities = [Item::class], version = 1, exportSchema = false)
+@Database(entities = [VacationItem::class], version = 1, exportSchema = false)
 abstract class ItemRoomDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ItemDao
@@ -40,7 +40,7 @@ abstract class ItemRoomDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ItemRoomDatabase::class.java,
-                    "item_database"
+                    "vacation_database"
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this codelab.

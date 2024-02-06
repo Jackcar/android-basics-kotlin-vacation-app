@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory
+package com.project.vacation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

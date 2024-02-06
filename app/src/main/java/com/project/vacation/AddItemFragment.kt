@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory
+package com.project.vacation
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
@@ -26,8 +26,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.inventory.data.Item
-import com.example.inventory.databinding.FragmentAddItemBinding
+import com.project.vacation.data.VacationItem
+import com.project.vacation.databinding.FragmentAddItemBinding
 
 /**
  * Fragment to add or update an item in the Inventory database.
@@ -38,13 +38,13 @@ class AddItemFragment : Fragment() {
     // to share the ViewModel across fragments.
     private val viewModel: InventoryViewModel by activityViewModels {
         InventoryViewModelFactory(
-            (activity?.application as InventoryApplication).database
+            (activity?.application as VacationApp).database
                 .itemDao()
         )
     }
     private val navigationArgs: ItemDetailFragmentArgs by navArgs()
 
-    lateinit var item: Item
+    lateinit var vacationItem: VacationItem
 
     // Binding object instance corresponding to the fragment_add_item.xml layout
     // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
@@ -56,7 +56,7 @@ class AddItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddItemBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,21 +66,20 @@ class AddItemFragment : Fragment() {
      */
     private fun isEntryValid(): Boolean {
         return viewModel.isEntryValid(
-            binding.itemName.text.toString(),
-            binding.itemPrice.text.toString(),
-            binding.itemCount.text.toString(),
+            binding.itemTitle.text.toString(),
+            binding.itemPlace.text.toString(),
+            binding.itemStartDate.text.toString(),
         )
     }
 
     /**
-     * Binds views with the passed in [item] information.
+     * Binds views with the passed in [vacationItem] information.
      */
-    private fun bind(item: Item) {
-        val price = "%.2f".format(item.itemPrice)
+    private fun bind(vacationItem: VacationItem) {
         binding.apply {
-            itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
-            itemPrice.setText(price, TextView.BufferType.SPANNABLE)
-            itemCount.setText(item.quantityInStock.toString(), TextView.BufferType.SPANNABLE)
+            itemTitle.setText(vacationItem.title, TextView.BufferType.SPANNABLE)
+            itemPlace.setText(vacationItem.place, TextView.BufferType.SPANNABLE)
+            itemStartDate.setText(vacationItem.startDate, TextView.BufferType.SPANNABLE)
             saveAction.setOnClickListener { updateItem() }
         }
     }
@@ -91,9 +90,10 @@ class AddItemFragment : Fragment() {
     private fun addNewItem() {
         if (isEntryValid()) {
             viewModel.addNewItem(
-                binding.itemName.text.toString(),
-                binding.itemPrice.text.toString(),
-                binding.itemCount.text.toString(),
+                binding.itemTitle.text.toString(),
+                binding.itemPlace.text.toString(),
+                binding.itemStartDate.text.toString(),
+                binding.itemEndDate.text.toString(),
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
@@ -107,10 +107,11 @@ class AddItemFragment : Fragment() {
         if (isEntryValid()) {
             viewModel.updateItem(
                 this.navigationArgs.itemId,
-                this.binding.itemName.text.toString(),
-                this.binding.itemPrice.text.toString(),
-                this.binding.itemCount.text.toString()
-            )
+                this.binding.itemTitle.text.toString(),
+                this.binding.itemPlace.text.toString(),
+                this.binding.itemStartDate.text.toString(),
+                this.binding.itemEndDate.text.toString()
+                )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
         }
@@ -128,8 +129,8 @@ class AddItemFragment : Fragment() {
         val id = navigationArgs.itemId
         if (id > 0) {
             viewModel.retrieveItem(id).observe(this.viewLifecycleOwner) { selectedItem ->
-                item = selectedItem
-                bind(item)
+                vacationItem = selectedItem
+                bind(vacationItem)
             }
         } else {
             binding.saveAction.setOnClickListener {

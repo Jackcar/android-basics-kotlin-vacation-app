@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.inventory
+package com.project.vacation
 
 import android.app.Application
-import com.example.inventory.data.ItemRoomDatabase
+import com.project.vacation.data.ItemRoomDatabase
 
 
-class InventoryApplication : Application() {
+class VacationApp : Application() {
     // Using by lazy so the database is only created when needed
     // rather than when the application starts
     val database: ItemRoomDatabase by lazy { ItemRoomDatabase.getDatabase(this) }

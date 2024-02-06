@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.example.inventory
+package com.project.vacation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.inventory.data.Item
-import com.example.inventory.data.ItemDao
+import com.project.vacation.data.VacationItem
+import com.project.vacation.data.ItemDao
 import kotlinx.coroutines.launch
 
 /**
@@ -32,13 +32,14 @@ import kotlinx.coroutines.launch
 class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
 
     // Cache all items form the database using LiveData.
-    val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
+    val allItems: LiveData<List<VacationItem>> = itemDao.getItems().asLiveData()
 
     /**
      * Returns true if stock is available to sell, false otherwise.
      */
-    fun isStockAvailable(item: Item): Boolean {
-        return (item.quantityInStock > 0)
+    fun isStockAvailable(vacationItem: VacationItem): Boolean {
+//        return (vacationItem.startDate > 0)
+        return true
     }
 
     /**
@@ -46,11 +47,12 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
      */
     fun updateItem(
         itemId: Int,
-        itemName: String,
-        itemPrice: String,
-        itemCount: String
+        itemTitle: String,
+        itemPlace: String,
+        itemStartDate: String,
+        itemEndDate: String
     ) {
-        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemPrice, itemCount)
+        val updatedItem = getUpdatedItemEntry(itemId, itemTitle, itemPlace, itemStartDate, itemEndDate)
         updateItem(updatedItem)
     }
 
@@ -58,53 +60,53 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     /**
      * Launching a new coroutine to update an item in a non-blocking way
      */
-    private fun updateItem(item: Item) {
+    private fun updateItem(vacationItem: VacationItem) {
         viewModelScope.launch {
-            itemDao.update(item)
+            itemDao.update(vacationItem)
         }
     }
 
     /**
      * Decreases the stock by one unit and updates the database.
      */
-    fun sellItem(item: Item) {
-        if (item.quantityInStock > 0) {
-            // Decrease the quantity by 1
-            val newItem = item.copy(quantityInStock = item.quantityInStock - 1)
-            updateItem(newItem)
-        }
+    fun sellItem(vacationItem: VacationItem) {
+//        if (vacationItem.startDate > 0) {
+//            // Decrease the quantity by 1
+//            val newItem = vacationItem.copy(startDate = vacationItem.startDate - 1)
+//            updateItem(newItem)
+//        }
     }
 
     /**
      * Inserts the new Item into database.
      */
-    fun addNewItem(itemName: String, itemPrice: String, itemCount: String) {
-        val newItem = getNewItemEntry(itemName, itemPrice, itemCount)
+    fun addNewItem(itemTitle: String, itemPlace: String, itemStartDate: String, itemEndDate: String) {
+        val newItem = getNewItemEntry(itemTitle, itemPlace, itemStartDate, itemEndDate)
         insertItem(newItem)
     }
 
     /**
      * Launching a new coroutine to insert an item in a non-blocking way
      */
-    private fun insertItem(item: Item) {
+    private fun insertItem(vacationItem: VacationItem) {
         viewModelScope.launch {
-            itemDao.insert(item)
+            itemDao.insert(vacationItem)
         }
     }
 
     /**
      * Launching a new coroutine to delete an item in a non-blocking way
      */
-    fun deleteItem(item: Item) {
+    fun deleteItem(vacationItem: VacationItem) {
         viewModelScope.launch {
-            itemDao.delete(item)
+            itemDao.delete(vacationItem)
         }
     }
 
     /**
      * Retrieve an item from the repository.
      */
-    fun retrieveItem(id: Int): LiveData<Item> {
+    fun retrieveItem(id: Int): LiveData<VacationItem> {
         return itemDao.getItem(id).asLiveData()
     }
 
@@ -119,32 +121,35 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     }
 
     /**
-     * Returns an instance of the [Item] entity class with the item info entered by the user.
+     * Returns an instance of the [VacationItem] entity class with the item info entered by the user.
      * This will be used to add a new entry to the Inventory database.
      */
-    private fun getNewItemEntry(itemName: String, itemPrice: String, itemCount: String): Item {
-        return Item(
-            itemName = itemName,
-            itemPrice = itemPrice.toDouble(),
-            quantityInStock = itemCount.toInt()
+    private fun getNewItemEntry(itemTitle: String, itemPlace: String, itemStartDate: String, itemEndDate: String): VacationItem {
+        return VacationItem(
+            title = itemTitle,
+            place = itemPlace,
+            startDate = itemStartDate,
+            endDate = itemEndDate
         )
     }
 
     /**
      * Called to update an existing entry in the Inventory database.
-     * Returns an instance of the [Item] entity class with the item info updated by the user.
+     * Returns an instance of the [VacationItem] entity class with the item info updated by the user.
      */
     private fun getUpdatedItemEntry(
         itemId: Int,
-        itemName: String,
-        itemPrice: String,
-        itemCount: String
-    ): Item {
-        return Item(
+        itemTitle: String,
+        itemPlace: String,
+        itemStartDate: String,
+        itemEndDate: String
+    ): VacationItem {
+        return VacationItem(
             id = itemId,
-            itemName = itemName,
-            itemPrice = itemPrice.toDouble(),
-            quantityInStock = itemCount.toInt()
+            title = itemTitle,
+            place = itemPlace,
+            startDate = itemStartDate,
+            endDate = itemEndDate
         )
     }
 }

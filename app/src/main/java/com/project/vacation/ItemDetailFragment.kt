@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.inventory
+package com.project.vacation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,21 +24,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.inventory.data.Item
-import com.example.inventory.data.getFormattedPrice
-import com.example.inventory.databinding.FragmentItemDetailBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.project.vacation.data.VacationItem
+import com.project.vacation.databinding.FragmentItemDetailBinding
 
 /**
  * [ItemDetailFragment] displays the details of the selected item.
  */
 class ItemDetailFragment : Fragment() {
     private val navigationArgs: ItemDetailFragmentArgs by navArgs()
-    lateinit var item: Item
+    lateinit var vacationItem: VacationItem
 
     private val viewModel: InventoryViewModel by activityViewModels {
         InventoryViewModelFactory(
-            (activity?.application as InventoryApplication).database.itemDao()
+            (activity?.application as VacationApp).database.itemDao()
         )
     }
 
@@ -57,13 +56,13 @@ class ItemDetailFragment : Fragment() {
     /**
      * Binds views with the passed in item data.
      */
-    private fun bind(item: Item) {
+    private fun bind(vacationItem: VacationItem) {
         binding.apply {
-            itemName.text = item.itemName
-            itemPrice.text = item.getFormattedPrice()
-            itemCount.text = item.quantityInStock.toString()
-            sellItem.isEnabled = viewModel.isStockAvailable(item)
-            sellItem.setOnClickListener { viewModel.sellItem(item) }
+            itemTitle.text = vacationItem.title
+            itemPlace.text = vacationItem.place
+            itemStartDate.text = vacationItem.startDate
+            sellItem.isEnabled = viewModel.isStockAvailable(vacationItem)
+            sellItem.setOnClickListener { viewModel.sellItem(vacationItem) }
             deleteItem.setOnClickListener { showConfirmationDialog() }
             editItem.setOnClickListener { editItem() }
         }
@@ -75,7 +74,7 @@ class ItemDetailFragment : Fragment() {
     private fun editItem() {
         val action = ItemDetailFragmentDirections.actionItemDetailFragmentToAddItemFragment(
             getString(R.string.edit_fragment_title),
-            item.id
+            vacationItem.id
         )
         this.findNavController().navigate(action)
     }
@@ -99,7 +98,7 @@ class ItemDetailFragment : Fragment() {
      * Deletes the current item and navigates to the list fragment.
      */
     private fun deleteItem() {
-        viewModel.deleteItem(item)
+        viewModel.deleteItem(vacationItem)
         findNavController().navigateUp()
     }
 
@@ -110,8 +109,8 @@ class ItemDetailFragment : Fragment() {
         // Attach an observer on the data (instead of polling for changes) and only update the
         // the UI when the data actually changes.
         viewModel.retrieveItem(id).observe(this.viewLifecycleOwner) { selectedItem ->
-            item = selectedItem
-            bind(item)
+            vacationItem = selectedItem
+            bind(vacationItem)
         }
     }
 
